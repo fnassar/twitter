@@ -29,17 +29,17 @@ def convert_to_datetime(time_str):
     return result
 
 def get_tweets(target_url, driver):
-    # driver.maximize_window()
+    # get the tweets from the user profile page
     driver.get(target_url)
     time.sleep(15)
 
     tweets = driver.find_elements(
         By.CSS_SELECTOR, "div[data-testid='cellInnerDiv']")
-    # print("Tweets found for", target_url.split("/")[-1], "are", len(tweets))
     return tweets
 
 
 def get_stock_count(tweet, time_int, unit):
+    # check for each tweet if it has a stock symbol
     reg = r"\$[A-Z]+"
     try:
         time = tweet.find_element(By.CSS_SELECTOR, "time")
@@ -56,6 +56,7 @@ def get_stock_count(tweet, time_int, unit):
     return []
 
 def display(found, time, unit, user):
+    # display the stocks mentioned in the last x time by each user
     print("Stocks mentioned in last '", time, "' minutes by '" if unit=='m' else "' hours by '", user, "' are:", end="")
     for key, value in found.items():
         print(key, ":", value, "times", end=" | ")
@@ -63,6 +64,7 @@ def display(found, time, unit, user):
 
 
 if __name__ == "__main__":
+    # get argument
     parser = argparse.ArgumentParser()
     parser.add_argument('--time', type=int,
                         help='time between checks in minutes', default='15')
